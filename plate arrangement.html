@@ -1,0 +1,284 @@
+<html>
+  <head>
+    <title>Plate Sequencer</title>
+  </head>
+  <body>
+    <form method="get">
+      <label for="noOfChannel" hidden="true">No of channel</label>
+      <Input type="number" id="noOfChannel" editable="false" hidden="true" />
+      </br>
+      <label for="noOfHotChannel">No of Hot Channel</label>
+      <input type="number" id="noOfHotChannel" onchange="determineInlet(this.value)" />
+      </br>
+      <label for="noOfColdChannel">No of Cold Channel</label>
+      <input type="number" id="noOfColdChannel" onchange="determineInlet(this.value)" />
+      </br>
+      <label for="typeOfPlateHot">Type of Plate for Hot Channel</label>
+      <select id="plateTypeHot">
+        <option value="H">H Type</option>
+        <option value="V">V Type</option>
+      </select>undefined</br>undefined<label for="typeOfPlateCold">Type of Plate for Cold Channel</label>undefined<select id="plateTypeCold">
+        <option value="H">H Type</option>
+        <option value="V">V Type</option>undefined
+      </select>undefined</br>undefined<label>Current Type</label>undefined<select id="currentType">undefined<option value="CO">Co-current</option>undefined<option value="COUNTER">Counter Current</option>undefined</select>undefined</br>undefined<label>Hot Channel Input Port</label>undefined<select onchange="hChannelIPChange()" id="hChannelIP"></select>undefined</br>undefined<label>Cold Channel Input Port</label>undefined<select id="cChannelIP"></select>undefined</br>undefined<label>Is outlet is on same side for hot fluid?</label>undefined<select>undefined<option value="Y">Yes</option>undefined<option value="N">No</option>undefined</select>undefined</br>undefined<label>Is outlet is on same side for cold fluid?</label>undefined<select>undefined<option value="Y">Yes</option>undefined<option value="N">No</option>undefined</select>undefined</br>undefined<input type="submit" onclick="calculate()" />undefined
+    </form>undefined<div>undefined<canvas id="frontPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas>undefined<canvas id="backPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas>undefined</div>undefined<div id="test">Output: undefined</br>undefined</div>undefined
+    <!--
+         no of plate = hot channel+cold channel + 1
+         expected output = no of plates, plate orientation, channel direction
+         -->undefined<script>
+      var modelPorts = [{
+        name: "F1",
+        locationy: "TOP",
+        locationx: "RIGHT"
+      }, {
+        name: "F2",
+        locationy: "BOTTOM",
+        locationx: "RIGHT"
+      }, {
+        name: "F3",
+        locationy: "BOTTOM",
+        locationx: "LEFT"
+      }, {
+        name: "F4",
+        locationy: "TOP",
+        locationx: "LEFT"
+      }, {
+        name: "P1",
+        locationy: "TOP",
+        locationx: "RIGHT"
+      }, {
+        name: "P2",
+        locationy: "BOTTOM",
+        locationx: "RIGHT"
+      }, {
+        name: "P3",
+        locationy: "BOTTOM",
+        locationx: "LEFT"
+      }, {
+        name: "P4",
+        locationy: "TOP",
+        locationx: "LEFT"
+      }];
+
+      function calculate() {
+        debugger;
+        var arrChannelSequence = [];
+        var arrPlateSequence = [];
+        var channelType = ["HOT", "COLD"];
+        var modelPlateType = ["H", "V"];
+        var modelCurrentType = ["CO", "COUNTER"];
+        var plateTypeHot = modelPlateType[document.getElementById("plateTypeHot").selectedIndex];
+        var plateTypeCold = modelPlateType[document.getElementById("plateTypeCold").selectedIndex];
+        var op = document.getElementById("test");
+        var noOfHotChannel = parseInt(document.getElementById("noOfHotChannel").value);
+        var noOfColdChannel = parseInt(document.getElementById("noOfColdChannel").value);
+        var totalPlates = noOfHotChannel + noOfColdChannel + 1;
+        if (noOfHotChannel > noOfColdChannel) {
+          for (i = 1; i < totalPlates; i++) {
+            arrChannelSequence.push({
+              channel: channelType[(i + 1) % 2]
+            });
+          }
+          for (i = 0; i < totalPlates; i++) {
+            switch (i) {
+              case 0:
+                arrPlateSequence.push({
+                  plateType: plateTypeCold,
+                  dam: ["F1", "F2", "F3", "F4"]
+                });
+                break;
+              default:
+                if (i % 2 === 0) {
+                  arrPlateSequence.push({
+                    plateType: plateTypeCold,
+                    dam: ["F3", "F4"]
+                  });
+                } else {
+                  arrPlateSequence.push({
+                    plateType: plateTypeHot,
+                    dam: ["F1", "F2"]
+                  });
+                }
+            }
+          }
+        } else if (noOfHotChannel === noOfColdChannel) {
+          //Any channel can be first
+          for (i = 1; i < totalPlates; i++) {
+            arrChannelSequence.push({
+              channel: channelType[(i + 1) % 2]
+            });
+          }
+          for (i = 0; i < totalPlates; i++) {
+            switch (i) {
+              case 0:
+                arrPlateSequence.push({
+                  plateType: plateTypeCold,
+                  dam: ["F1", "F2", "F3", "F4"]
+                });
+                break;
+              default:
+                if (i % 2 === 0) {
+                  arrPlateSequence.push({
+                    plateType: plateTypeCold,
+                    dam: ["F3", "F4"]
+                  });
+                } else {
+                  arrPlateSequence.push({
+                    plateType: plateTypeHot,
+                    dam: ["F1", "F2"]
+                  });
+                }
+            }
+          }
+        } else {
+          //Cold channel is first
+          for (i = 1; i < totalPlates; i++) {
+            arrChannelSequence.push({
+              channel: channelType[i % 2]
+            });
+          }
+          for (i = 0; i < totalPlates; i++) {
+            switch (i) {
+              case 0:
+                arrPlateSequence.push({
+                  plateType: plateTypeHot,
+                  dam: ["F1", "F2", "F3", "F4"]
+                });
+                break;
+              default:
+                if (i % 2 === 0) {
+                  arrPlateSequence.push({
+                    plateType: plateTypeHot,
+                    dam: ["F3", "F4"]
+                  });
+                } else {
+                  arrPlateSequence.push({
+                    plateType: plateTypeCold,
+                    dam: ["F1", "F2"]
+                  });
+                }
+            }
+          }
+        }
+        op.innerHTML = op.getInnerHTML() + "undefined<p> No of Plates " + totalPlates + "</p>"
+      }
+
+      function determineInlet(val) {
+        var noOfHotChannel = parseInt(document.getElementById("noOfHotChannel").value);
+        var noOfColdChannel = parseInt(document.getElementById("noOfColdChannel").value);
+        if (noOfHotChannel > noOfColdChannel) {
+          //add option dynamically in hot input
+          for (i = 0; iundefined < document.getElementById("hChannelIP").length;) {
+            document.getElementById("hChannelIP").remove(i);
+          }
+          var oOption = document.createElement("option");
+          oOption.value = "F3";
+          oOption.text = "F3";
+          document.getElementById("hChannelIP").add(oOption);
+          oOption = document.createElement("option");;
+          oOption.value = "F4";
+          oOption.text = "F4";
+          document.getElementById("hChannelIP").add(oOption);
+          oOption = document.createElement("option");
+          oOption.value = "P3";
+          oOption.text = "P3";
+          document.getElementById("hChannelIP").add(oOption);
+          oOption = document.createElement("option");;
+          oOption.value = "P4";
+          oOption.text = "P4";
+          document.getElementById("hChannelIP").add(oOption);
+        }
+        if (noOfHotChannelundefined < noOfColdChannel) {
+          //add option dynamically in hot input
+          for (i = 0; iundefined < document.getElementById("hChannelIP").length;) {
+            document.getElementById("hChannelIP").remove(i);
+          }
+          var oOption = document.createElement("option");
+          oOption.value = "F1";
+          oOption.text = "F1";
+          document.getElementById("hChannelIP").add(oOption);
+          oOption = document.createElement("option");;
+          oOption.value = "F2";
+          oOption.text = "F2";
+          document.getElementById("hChannelIP").add(oOption);
+          oOption = document.createElement("option");
+          oOption.value = "P1";
+          oOption.text = "P1";
+          document.getElementById("hChannelIP").add(oOption);
+          oOption = document.createElement("option");;
+          oOption.value = "P2";
+          oOption.text = "P2";
+          document.getElementById("hChannelIP").add(oOption);
+        }
+        if (noOfHotChannel == noOfColdChannel) {
+          var oOption;
+          modelPorts.forEach(function(i) {
+            oOption = document.createElement("option");;
+            oOption.value = i.name;
+            oOption.text = i.name;
+            document.getElementById("hChannelIP").add(oOption);
+          });
+        }
+      }
+
+      function hChannelIPChange() {}
+      var c = document.getElementById("frontPlate");
+      var ctx = c.getContext("2d");
+      ctx.moveTo(50, 0);
+      ctx.lineTo(0, 50);
+      ctx.stroke();
+      ctx.moveTo(150, 0);
+      ctx.lineTo(200, 50);
+      ctx.stroke();
+      ctx.moveTo(0, 350);
+      ctx.lineTo(50, 400);
+      ctx.stroke();
+      ctx.moveTo(150, 400);
+      ctx.lineTo(200, 350);
+      ctx.stroke();
+      ctx.font = "20px Arial";
+      ctx.fillText("F1", 175, 20);
+      ctx.fillText("F2", 175, 390);
+      ctx.fillText("F3", 0, 390);
+      ctx.fillText("F4", 0, 20);
+      var backPlate = document.getElementById("backPlate");
+      var ctxBackPlate = backPlate.getContext("2d");
+      ctxBackPlate.moveTo(50, 0);
+      ctxBackPlate.lineTo(0, 50);
+      ctxBackPlate.stroke();
+      ctxBackPlate.moveTo(150, 0);
+      ctxBackPlate.lineTo(200, 50);
+      ctxBackPlate.stroke();
+      ctxBackPlate.moveTo(0, 350);
+      ctxBackPlate.lineTo(50, 400);
+      ctxBackPlate.stroke();
+      ctxBackPlate.moveTo(150, 400);
+      ctxBackPlate.lineTo(200, 350);
+      ctxBackPlate.stroke();
+      ctxBackPlate.font = "20px Arial";
+      ctxBackPlate.fillText("P4", 175, 20);
+      ctxBackPlate.fillText("P3", 175, 390);
+      ctxBackPlate.fillText("P2", 0, 390);
+      ctxBackPlate.fillText("P1", 0, 20);
+      undefined
+    </script>undefined
+  </body>undefined
+</html>undefined
+<!--
+   Start plate will have all ported dammed on f1-f4 side
+   first plate will have f1 f2 dammed and 
+   nextaplate onwards f3,f4 will be dammed(alternating) and so on
+   
+   Start plate type will be based what has min no of channel.
+   if no of channels is same then start plate will be of type cold,
+   because cold channel will be made up of n+1 plates
+   if no of channels is same in that case start plate depened on
+   plate type of cold(because we are keeping first cahnnel for hot always if first channel is cold then plate type of start plate will be of hot plate)
+   If no of channels are not same then input will be F3/F4 or P3/P4 for more no of channel type
+   ip op
+   F4 F3,P3
+   P1 F2,P2
+   
+   Assumptions:
+   
+   -->
