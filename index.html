@@ -17,15 +17,15 @@
       <select id="plateTypeHot">
         <option value="H">H Type</option>
         <option value="V">V Type</option>
-      </select>undefined</br>undefined<label for="typeOfPlateCold">Type of Plate for Cold Channel</label>undefined<select id="plateTypeCold">
+      </select></br><label for="typeOfPlateCold">Type of Plate for Cold Channel</label><select id="plateTypeCold">
         <option value="H">H Type</option>
-        <option value="V">V Type</option>undefined
-      </select>undefined</br>undefined<label>Current Type</label>undefined<select id="currentType">undefined<option value="CO">Co-current</option>undefined<option value="COUNTER">Counter Current</option>undefined</select>undefined</br>undefined<label>Hot Channel Input Port</label>undefined<select onchange="hChannelIPChange()" id="hChannelIP"></select>undefined</br>undefined<label>Cold Channel Input Port</label>undefined<select id="cChannelIP"></select>undefined</br>undefined<label>Is outlet is on same side for hot fluid?</label>undefined<select>undefined<option value="Y">Yes</option>undefined<option value="N">No</option>undefined</select>undefined</br>undefined<label>Is outlet is on same side for cold fluid?</label>undefined<select>undefined<option value="Y">Yes</option>undefined<option value="N">No</option>undefined</select>undefined</br>undefined<input type="submit" onclick="calculate()" />undefined
-    </form>undefined<div>undefined<canvas id="frontPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas>undefined<canvas id="backPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas>undefined</div>undefined<div id="test">Output: undefined</br>undefined</div>undefined
+        <option value="V">V Type</option>
+      </select></br><label>Current Type</label><select id="currentType"><option value="CO">Co-current</option><option value="COUNTER">Counter Current</option></select></br><label>Hot Channel Input Port</label><select onchange="hChannelIPChange()" id="hChannelIP"></select></br><label>Cold Channel Input Port</label><select id="cChannelIP"></select></br><label>Is outlet is on same side for hot fluid?</label><select><option value="Y">Yes</option><option value="N">No</option></select></br><label>Is outlet is on same side for cold fluid?</label><select><option value="Y">Yes</option><option value="N">No</option></select></br><input type="submit" onclick="calculate()" />
+    </form><div><canvas id="frontPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas><canvas id="backPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas></div><div id="test">Output: </br></div>
     <!--
          no of plate = hot channel+cold channel + 1
          expected output = no of plates, plate orientation, channel direction
-         -->undefined<script>
+         --><script>
       var modelPorts = [{
         name: "F1",
         locationy: "TOP",
@@ -160,7 +160,7 @@
             }
           }
         }
-        op.innerHTML = op.getInnerHTML() + "undefined<p> No of Plates " + totalPlates + "</p>"
+        op.innerHTML = op.getInnerHTML() + "<p> No of Plates " + totalPlates + "</p>"
       }
 
       function determineInlet(val) {
@@ -168,7 +168,7 @@
         var noOfColdChannel = parseInt(document.getElementById("noOfColdChannel").value);
         if (noOfHotChannel > noOfColdChannel) {
           //add option dynamically in hot input
-          for (i = 0; iundefined < document.getElementById("hChannelIP").length;) {
+          for (i = 0; i < document.getElementById("hChannelIP").length;) {
             document.getElementById("hChannelIP").remove(i);
           }
           var oOption = document.createElement("option");
@@ -188,9 +188,9 @@
           oOption.text = "P4";
           document.getElementById("hChannelIP").add(oOption);
         }
-        if (noOfHotChannelundefined < noOfColdChannel) {
+        if (noOfHotChannel < noOfColdChannel) {
           //add option dynamically in hot input
-          for (i = 0; iundefined < document.getElementById("hChannelIP").length;) {
+          for (i = 0; i < document.getElementById("hChannelIP").length;) {
             document.getElementById("hChannelIP").remove(i);
           }
           var oOption = document.createElement("option");
@@ -260,10 +260,10 @@
       ctxBackPlate.fillText("P3", 175, 390);
       ctxBackPlate.fillText("P2", 0, 390);
       ctxBackPlate.fillText("P1", 0, 20);
-      undefined
-    </script>undefined
-  </body>undefined
-</html>undefined
+      
+    </script>
+  </body>
+</html>
 <!--
    Start plate will have all ported dammed on f1-f4 side
    first plate will have f1 f2 dammed and 
