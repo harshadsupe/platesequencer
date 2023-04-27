@@ -11,15 +11,35 @@
 </br><label for="noOfColdChannel">No of Cold Channel</label>
 <input type="number" id="noOfColdChannel" onchange="determineInlet(this.value)"/>
 </br><label for="typeOfPlateHot">Type of Plate for Hot Channel</label>
-<select id="plateTypeHot">
+<select id="plateTypeHot"  onchange="hotPlateTypeChange(this.value)">
     <option value="H">H Type</option>
     <option value="V">V Type</option>
+    <option value="HV">HV Type</option>
 </select>
+<div id="hotPlateHVDetail" style="display: none;">
+    <label>Provide no of plates for H type</label>
+    <input type="number"/></br>
+<label>Which plate type will be there used towards front side</label>
+<select>
+    <option value="H">H</option>
+    <option value="V">V</option>
+</select></br>
+</div>
 </br><label for="typeOfPlateCold">Type of Plate for Cold Channel</label>
-<select id="plateTypeCold">
+<select id="plateTypeCold" onchange="coldPlateTypeChange(this.value)">
     <option value="H">H Type</option>
     <option value="V">V Type</option>
+    <option value="HV">HV Type</option>
 </select>
+<div id="coldPlateHVDetail" style="display: none;">
+    <label>Provide no of plates for H type</label>
+    <input type="number"/></br>
+<label>Which plate type will be there used towards front side</label>
+<select>
+    <option value="H">H</option>
+    <option value="V">V</option>
+</select></br>
+</div>
 </br><label>Current Type</label>
 <select id="currentType">
     <option value="CO">Co-current</option>
@@ -278,6 +298,20 @@
                 oOption.text = i.name;
                 document.getElementById("hChannelIP").add(oOption);
             });
+        }
+    }
+    function hotPlateTypeChange(val){
+        if(val === "HV"){
+            document.getElementById("hotPlateHVDetail").style.display = "block";
+        }else{
+            document.getElementById("hotPlateHVDetail").style.display = "none";
+        }
+    }
+    function coldPlateTypeChange(val){
+        if(val === "HV"){
+            document.getElementById("coldPlateHVDetail").style.display = "block";
+        }else{
+            document.getElementById("coldPlateHVDetail").style.display = "none";
         }
     }
 
