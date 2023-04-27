@@ -27,8 +27,6 @@
 </select>
 </br><label>Hot Channel Input Port</label>
 <select onchange="hChannelIPChange()" id="hChannelIP"></select>
-</br><label>Cold Channel Input Port</label>
-<select id="cChannelIP"></select>
 </br><label>Is outlet is on same side for hot fluid?</label>
 <select>
     <option value="Y">Yes</option>
@@ -40,7 +38,9 @@
     <option value="N">No</option>
 </select>
 </br><input type="button" onclick="calculate()" value="Submit"/>
-</form>
+</form></br>
+<label>Cold Channel Input Port</label>
+<select id="cChannelIP"></select>
 <div>
     <canvas id="frontPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas>
     <canvas id="backPlate" width="200" height="400" style="border:2px solid black;">Your browser does not support the HTML canvas tag.</canvas>
@@ -55,35 +55,43 @@
     var modelPorts = [{
         name: "F1",
         locationy: "TOP",
-        locationx: "RIGHT"
+        locationx: "RIGHT",
+        side:"FRONT"
     }, {
         name: "F2",
         locationy: "BOTTOM",
-        locationx: "RIGHT"
+        locationx: "RIGHT",
+        side:"FRONT"
     }, {
         name: "F3",
         locationy: "BOTTOM",
-        locationx: "LEFT"
+        locationx: "LEFT",
+        side:"FRONT"
     }, {
         name: "F4",
         locationy: "TOP",
-        locationx: "LEFT"
+        locationx: "LEFT",
+        side:"FRONT"
     }, {
         name: "P1",
         locationy: "TOP",
-        locationx: "RIGHT"
+        locationx: "RIGHT",
+        side:"PRESSURE"
     }, {
         name: "P2",
         locationy: "BOTTOM",
-        locationx: "RIGHT"
+        locationx: "RIGHT",
+        side:"PRESSURE"
     }, {
         name: "P3",
         locationy: "BOTTOM",
-        locationx: "LEFT"
+        locationx: "LEFT",
+        side:"PRESSURE"
     }, {
         name: "P4",
         locationy: "TOP",
-        locationx: "LEFT"
+        locationx: "LEFT",
+        side:"PRESSURE"
     }];
 
     function calculate() {
@@ -192,6 +200,28 @@
             op.innerHTML = op.getInnerHTML() + "<p>Plate No:"+plateNo+", Plate Type " + i.plateType + ", Dams : "+i.dam+"</p>"
         });
     }
+    function updateColdChannelInput(){
+        //If co current then if hot and cold will be both on same side either top or bottom
+        var currentType = document.getElementById("currentType").options[document.getElementById("currentType").selectedIndex].value;
+        var hotInput,hotInputSide,coldInputSide,hPortDetail;
+        try{
+                hotInput = document.getElementById("hChannelIP").options[document.getElementById("hChannelIP").selectedIndex].value;
+                //get hot input port details
+                hPortDetail = modelPorts.filter(function(a){
+                    if (a.name === x) {
+                        return a;
+                    }
+                });
+            hotInputSide =hPortDetail.side; 
+            }catch(e){console.log("Hot  channel input not selected yet");}
+        
+        if(currentType === "COUNTER"){
+            //fetch if hot input is on top or bottom
+            
+            
+        }else if(currentType === "CO"){
+        }
+    }
 
     function determineInlet(val) {
         var noOfHotChannel = parseInt(document.getElementById("noOfHotChannel").value);
@@ -206,7 +236,7 @@
             oOption.text = "F3";
             document.getElementById("hChannelIP").add(oOption);
             oOption = document.createElement("option");
-            ;oOption.value = "F4";
+            oOption.value = "F4";
             oOption.text = "F4";
             document.getElementById("hChannelIP").add(oOption);
             oOption = document.createElement("option");
@@ -214,7 +244,7 @@
             oOption.text = "P3";
             document.getElementById("hChannelIP").add(oOption);
             oOption = document.createElement("option");
-            ;oOption.value = "P4";
+            oOption.value = "P4";
             oOption.text = "P4";
             document.getElementById("hChannelIP").add(oOption);
         }
