@@ -186,8 +186,10 @@
             }
         }
         op.innerHTML = op.getInnerHTML() + "<p> No of Plates " + totalPlates + "</p>"
+        var plateNo=0;
         arrPlateSequence.forEach(function(i){
-            op.innerHTML = op.getInnerHTML() + "<p>Plate Type " + i.plateType + ", Dams : "+i.dam+"</p>"
+            plateNo++;
+            op.innerHTML = op.getInnerHTML() + "<p>Plate No:"+plateNo+", Plate Type " + i.plateType + ", Dams : "+i.dam+"</p>"
         });
     }
 
@@ -226,7 +228,7 @@
             oOption.text = "F1";
             document.getElementById("hChannelIP").add(oOption);
             oOption = document.createElement("option");
-            ;oOption.value = "F2";
+            oOption.value = "F2";
             oOption.text = "F2";
             document.getElementById("hChannelIP").add(oOption);
             oOption = document.createElement("option");
@@ -234,7 +236,7 @@
             oOption.text = "P1";
             document.getElementById("hChannelIP").add(oOption);
             oOption = document.createElement("option");
-            ;oOption.value = "P2";
+            oOption.value = "P2";
             oOption.text = "P2";
             document.getElementById("hChannelIP").add(oOption);
         }
@@ -242,7 +244,7 @@
             var oOption;
             modelPorts.forEach(function(i) {
                 oOption = document.createElement("option");
-                ;oOption.value = i.name;
+                oOption.value = i.name;
                 oOption.text = i.name;
                 document.getElementById("hChannelIP").add(oOption);
             });
