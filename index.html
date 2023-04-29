@@ -18,9 +18,9 @@
 </select>
 <div id="hotPlateHVDetail" style="display: none;margin:10px;padding:5px;border-style:inset;border-color:black;">
     <label>Provide no of plates for H type</label>
-    <input type="number"/></br>
+    <input type="number" id="hotPlatesHVCountH"/></br>
 <label>Which plate type will be there used towards front side</label>
-<select>
+<select id="hotPlatesHVFirstType">
     <option value="H">H</option>
     <option value="V">V</option>
 </select></br>
@@ -33,9 +33,9 @@
 </select>
 <div id="coldPlateHVDetail" style="display: none;margin:10px;padding:5px;border-style:inset;border-color:black;">
     <label>Provide no of plates for H type</label>
-    <input type="number"/></br>
+    <input type="number" id="coldPlatesHVCountH"/></br>
 <label>Which plate type will be there used towards front side</label>
-<select>
+<select id="coldPlatesHVFirstType">
     <option value="H">H</option>
     <option value="V">V</option>
 </select></br>
@@ -123,16 +123,40 @@
         var plateTypeHot = modelPlateType[document.getElementById("plateTypeHot").selectedIndex];
         var plateTypeCold = modelPlateType[document.getElementById("plateTypeCold").selectedIndex];
         var op = document.getElementById("test");
+	op.innerHTML = "";
         var noOfHotChannel = parseInt(document.getElementById("noOfHotChannel").value);
         var noOfColdChannel = parseInt(document.getElementById("noOfColdChannel").value);
         var totalPlates = noOfHotChannel + noOfColdChannel + 1;
+        var hotPlatesHVCountH = parseInt(document.getElementById("hotPlatesHVCountH").value);
+        var coldPlatesHVCountH = parseInt(document.getElementById("coldPlatesHVCountH").value);
         if (noOfHotChannel > noOfColdChannel) {
             for (i = 1; i < totalPlates; i++) {
                 arrChannelSequence.push({
                     channel: channelType[(i + 1) % 2]
                 });
             }
+            
             for (i = 0; i < totalPlates; i++) {
+                if(plateTypeHot == undefined){
+                    plateTypeHot = document.getElementById("hotPlatesHVFirstType").options[document.getElementById("hotPlatesHVFirstType").selectedIndex].value;                
+                }
+                if(i === hotPlatesHVCountH * 2){
+                    if(plateTypeHot === "H"){
+                        plateTypeHot = "V";
+                    }else if(plateTypeHot === "V"){
+                        plateTypeHot = "H";
+                    }
+                }
+		if(plateTypeCold == undefined){
+                    plateTypeCold = document.getElementById("coldPlatesHVFirstType").options[document.getElementById("coldPlatesHVFirstType").selectedIndex].value;                
+                }
+                if(i === coldPlatesHVCountH * 2){
+                    if(plateTypeCold === "H"){
+                        plateTypeCold = "V";
+                    }else if(plateTypeCold === "V"){
+                        plateTypeCold = "H";
+                    }
+                }
                 switch (i) {
                 case 0:
                     arrPlateSequence.push({
@@ -234,12 +258,18 @@
                 });
             hotInputSide =hPortDetail.side; 
             }catch(e){console.log("Hot  channel input not selected yet");}
-        
+        var coldChannelip={};
         if(currentType === "COUNTER"){
             //fetch if hot input is on top or bottom
-            
-            
-        }else if(currentType === "CO"){
+            if(hPortDetail.locationx === "TOP"){
+                coldChannelip.locationx = "BOTTOM";
+            }
+            if(hPortDetail.locationx === "BOTTOM"){
+                coldChannelip.locationx = "TOP";
+            }            
+        }
+        if(currentType === "CO"){
+            coldChannelip.locationx = hPortDetail.locationx;
         }
     }
 
