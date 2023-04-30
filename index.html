@@ -186,6 +186,26 @@
                 });
             }
             for (i = 0; i < totalPlates; i++) {
+		    if(plateTypeHot == undefined){
+                    plateTypeHot = document.getElementById("hotPlatesHVFirstType").options[document.getElementById("hotPlatesHVFirstType").selectedIndex].value;                
+                }
+                if(i === hotPlatesHVCountH * 2){
+                    if(plateTypeHot === "H"){
+                        plateTypeHot = "V";
+                    }else if(plateTypeHot === "V"){
+                        plateTypeHot = "H";
+                    }
+                }
+		if(plateTypeCold == undefined){
+                    plateTypeCold = document.getElementById("coldPlatesHVFirstType").options[document.getElementById("coldPlatesHVFirstType").selectedIndex].value;                
+                }
+                if(i === coldPlatesHVCountH * 2){
+                    if(plateTypeCold === "H"){
+                        plateTypeCold = "V";
+                    }else if(plateTypeCold === "V"){
+                        plateTypeCold = "H";
+                    }
+                }
                 switch (i) {
                 case 0:
                     arrPlateSequence.push({
